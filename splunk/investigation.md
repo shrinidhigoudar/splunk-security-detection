@@ -1,60 +1,43 @@
-\# Splunk Investigation
+# Splunk Investigation
 
 
 
-\## RDP Brute Force Investigation
-
-
+## RDP Brute Force Investigation
 
 After the alert was triggered, the events were investigated using:
 
+- Account name
 
+- Source network address
 
-\- Account name
+- Number of failed attempts
 
-\- Source network address
-
-\- Number of failed attempts
-
-\- Event timestamp
-
-
+- Event timestamp
 
 The search results were reviewed to determine whether multiple failed
-
 authentication attempts originated from the same source.
 
 
 
-\## MSHTA Investigation
-
-
+## MSHTA Investigation
 
 For MSHTA activity, the following information was reviewed:
 
+- Process name
 
+- Process command line
 
-\- Process name
+- Account
 
-\- Process command line
+- Computer name
 
-\- Account
+- Parent/creator process
 
-\- Computer name
-
-\- Parent/creator process
-
-\- Event timestamp
-
-
+- Event timestamp
 
 This helped verify the process execution observed by the detection.
 
-
-
-\## Investigation Evidence
-
-
+## Investigation Evidence
 
 The screenshots in the `screenshots/` directory show the searches and
 
