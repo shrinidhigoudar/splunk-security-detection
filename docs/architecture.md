@@ -1,8 +1,8 @@
-\# Architecture
+# Architecture
 
 
 
-\## Overview
+## Overview
 
 
 
@@ -14,9 +14,9 @@ The lab uses two virtual machines on an isolated internal network:
 
 
 
-\- \*\*Kali Linux VM\*\* — runs Splunk Enterprise and acts as the attacker/SIEM.
+- \*\*Kali Linux VM\*\* — runs Splunk Enterprise and acts as the attacker/SIEM.
 
-\- \*\*Windows 11 VM\*\* — monitored target that generates Windows Security Event Logs.
+- \*\*Windows 11 VM\*\* — monitored target that generates Windows Security Event Logs.
 
 
 
@@ -24,15 +24,15 @@ The Windows events are collected by the Splunk Universal Forwarder and forwarded
 
 
 
-\## Architecture Diagram
+## Architecture Diagram
 
 
 
-!\[Splunk Security Detection Architecture](architecture.png)
+![Splunk Security Detection Architecture](architecture.png)
 
 
 
-\## Network Flow
+## Network Flow
 
 
 
@@ -82,7 +82,7 @@ The forwarding connection uses TCP port `9997`. Splunk Enterprise listens on Kal
 
 
 
-\## Detection Flow
+## Detection Flow
 
 
 
@@ -90,9 +90,9 @@ The Windows VM generates relevant Security events, including:
 
 
 
-\- `4625` — failed logon
+- `4625` — failed logon
 
-\- `4688` — process creation
+- `4688` — process creation
 
 
 
@@ -104,13 +104,13 @@ The two main detections are:
 
 
 
-\- RDP Brute Force
+- RDP Brute Force
 
-\- MSHTA LOLBin execution
+- MSHTA LOLBin execution
 
 
 
-\## Components
+## Components
 
 
 
