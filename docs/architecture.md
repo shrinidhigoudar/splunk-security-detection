@@ -6,21 +6,21 @@
 
 
 
-This project demonstrates SIEM-based security detection approache using the
-
-same Windows test environment:
+This project implements a small Detection Engineering / SOC lab using Splunk Enterprise.
 
 
 
-\- Splunk
+The lab uses two virtual machines on an isolated internal network:
 
 
 
-The Windows 11 target VM generates security events. These events are collected
+\- \*\*Kali Linux VM\*\* — runs Splunk Enterprise and acts as the attacker/SIEM.
 
-and analysed to detect suspicious activity such as RDP brute-force attempts and
+\- \*\*Windows 11 VM\*\* — monitored target that generates Windows Security Event Logs.
 
-MSHTA/PowerShell execution.
+
+
+The Windows events are collected by the Splunk Universal Forwarder and forwarded to Splunk Enterprise for detection and investigation.
 
 
 
@@ -28,81 +28,103 @@ MSHTA/PowerShell execution.
 
 
 
-!\[Splunk Security Detection Architecture](../screenshots/architecture.png)
+!\[Splunk Security Detection Architecture](architecture.png)
 
 
 
-\## Environment
+\## Network Flow
 
 
 
-\### Windows 11 Target VM
+```text
+
+Windows 11 VM
+
+192.168.56.5
+
+&#x20;     |
+
+&#x20;     | Windows Security Events
+
+&#x20;     | Splunk Universal Forwarder
+
+&#x20;     |
+
+&#x20;     | TCP 9997
+
+&#x20;     v
+
+Kali Linux VM
+
+192.168.56.4
+
+&#x20;     |
+
+&#x20;     | Splunk Enterprise
+
+&#x20;     |
+
+&#x20;     v
+
+SPL Detection Searches
+
+&#x20;     |
+
+&#x20;     v
+
+Splunk Alerts
+
+```
 
 
 
-The Windows 11 VM is the monitored endpoint.
+The forwarding connection uses TCP port `9997`. Splunk Enterprise listens on Kali, while the Universal Forwarder on Windows sends the collected events to the Kali Splunk instance.
 
 
 
-It generates Windows Security Event Log events such as:
+\## Detection Flow
 
 
 
-\- Event ID 4625 — Failed logon
-
-\- Event ID 4688 — New process creation
+The Windows VM generates relevant Security events, including:
 
 
 
-\### Splunk
+\- `4625` — failed logon
+
+\- `4688` — process creation
 
 
 
-Splunk is used to search and analyse the Windows security events.
+These events are forwarded to Splunk, where SPL searches identify suspicious activity and are configured as scheduled alerts.
 
 
 
-The project contains two detections:
+The two main detections are:
 
 
 
-1\. RDP Brute Force Detection
+\- RDP Brute Force
 
-2\. MSHTA LOLBin Detection
-
-
-
-\## Data Flow
+\- MSHTA LOLBin execution
 
 
 
-Windows 11 Target VM
-
-→ Windows Security Events
-
-→ SIEM
-
-→ Detection Search / Rule
-
-→ Alert
-
-→ Investigation
+\## Components
 
 
 
-For the Splunk implementation:
+| Component | Role |
 
+|---|---|
 
+| Windows 11 VM | Monitored endpoint and event source |
 
-Windows 11 Target VM
+| Splunk Universal Forwarder | Collects and forwards Windows events |
 
-→ WinEventLog:Security
+| Kali Linux VM | Splunk server and attack/testing environment |
 
-→ Splunk
+| Splunk Enterprise | SIEM, search and alerting platform |
 
-→ SPL Search
-
-→ Detection Result
-
-→ Investigation
+| SPL | Detection and investigation queries |
 

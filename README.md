@@ -1,154 +1,101 @@
-\# Splunk Security Detection
+# Splunk Security Detection
 
-
-A hands-on SIEM project using \*\*Splunk\*\* to analyse Windows Security Event
-Logs and detect suspicious activity.
+A hands-on SIEM project using **Splunk** to analyse Windows Security Event Logs and detect suspicious activity.
 
 The project focuses on two detections:
 
-\- RDP Brute Force
-\- MSHTA LOLBin
+- RDP Brute Force
+- MSHTA LOLBin
 
-
-
-\## Lab Environment
+## Lab Environment
 
 The project uses two virtual machines:
 
-\- \*\*Windows VM\*\* — monitored/target machine
+- **Windows VM** — monitored/target machine
+- **Kali Linux VM** — Splunk Enterprise and security analysis
 
-\- \*\*Kali Linux VM\*\* — Splunk Enterprise and security analysis
+The Windows VM generates security events that are collected and analysed in Splunk.
 
-
-The Windows VM generates security events that are collected and analysed
-
-in Splunk.
-
-
-
-\## Architecture
+## Architecture
 
 ![Splunk Security Detection Architecture](docs/architecture.png)
 
 The complete architecture and data flow are documented here:
 
-\[View Architecture](docs/architecture.md)
+[View Architecture](docs/architecture.md)
 
+## Detection 1 — RDP Brute Force
 
+The RDP detection uses Windows Security Event ID `4625`, which represents a failed logon attempt.
 
-\## Detection 1 — RDP Brute Force
+The events are analysed using the account name, source network address and number of failed attempts to identify repeated authentication failures.
 
-The RDP detection uses Windows Security Event ID `4625`, which represents
-a failed logon attempt.
+**MITRE ATT&CK:** `T1110 - Brute Force`
 
-The events are analysed using the account name, source network address and
-number of failed attempts to identify repeated authentication failures.
+[View RDP Detection](splunk/alerts/rdp-brute-force.md)
 
+### Evidence
 
+![RDP Search](screenshots/RDPSearch.png)
 
-\*\*MITRE ATT\&CK:\*\* `T1110 - Brute Force`
+![RDP Triggered Events](screenshots/RDPTriggeredEvents.png)
 
-\[View RDP Detection](splunk/alerts/rdp-brute-force.md)
+## Detection 2 — MSHTA LOLBin
 
-\### Evidence
+The MSHTA detection uses Windows Security Event ID `4688`, which represents process creation.
 
-!\[RDP Search](screenshots/RDPSearch.png)
+The detection looks for `mshta.exe` activity and relevant command-line indicators.
 
+**MITRE ATT&CK:** `T1218.005 - Mshta`
 
-!\[RDP Triggered Events](screenshots/RDPTriggeredEvents.png)
+[View MSHTA Detection](splunk/alerts/mshta-lolbin.md)
 
+### Evidence
 
+![MSHTA Triggered Events](screenshots/mshtaTriggeredEvents.png)
 
-\## Detection 2 — MSHTA LOLBin
-
-The MSHTA detection uses Windows Security Event ID `4688`, which represents
-process creation.
-
-The detection looks for `mshta.exe` activity and relevant command-line
-indicators.
-
-
-\*\*MITRE ATT\&CK:\*\* `T1218.005 - Mshta`
-
-\[View MSHTA Detection](splunk/alerts/mshta-lolbin.md)
-
-\### Evidence
-
-!\[MSHTA Triggered Events](screenshots/mshtaTriggeredEvents.png)
-
-\## Investigation
+## Investigation
 
 The investigation process is documented separately:
 
-\[View Investigation](splunk/investigation.md)
+[View Investigation](splunk/investigation.md)
 
-The investigation focuses on the information available in the detected
-events, including accounts, source addresses, process information,
-command lines and timestamps.
+The investigation focuses on the information available in the detected events, including accounts, source addresses, process information, command lines and timestamps.
 
+## Splunk Configuration
 
+The project also contains documentation for the Splunk configuration used during the setup:
 
-\## Splunk Configuration
+[View Configuration](splunk/configuration/README.md)
 
-
-The project also contains documentation for the Splunk configuration used
-during the setup:
-
-\[View Configuration](splunk/configuration/README.md)
-
-
-
-\## Project Structure
+## Project Structure
 
 ```text
-
 splunk-security-detection/
-
 │
-
 ├── README.md
-
 │
-
 ├── docs/
-
-│   └── architecture.md
-
+│   ├── architecture.md
+│   └── architecture.png
 │
-
 ├── screenshots/
-
-│   ├── architecture.png
-
 │   ├── jobMgmtAlert.png
-
 │   ├── mshtaTriggeredEvents.png
-
 │   ├── queryTable.png
-
 │   ├── RDPSearch.png
-
 │   └── RDPTriggeredEvents.png
-
 │
-
 └── splunk/
-
-   ├── alerts/
-
-   │   ├── mshta-lolbin.md
-
-   │   └── rdp-brute-force.md
-
-   │
-
-   ├── configuration/
-
-   │   └── README.md
-
-   │
-
-   └── investigation.md
+    ├── alerts/
+    │   ├── mshta-lolbin.md
+    │   └── rdp-brute-force.md
+    │
+    ├── configuration/
+    │   └── README.md
+    │
+    └── investigation.md
+```
 
 ---
 
@@ -180,9 +127,7 @@ splunk-security-detection/
 
 # Project Takeaway
 
-This project provided practical experience in using a SIEM to move from raw
-Windows security events to usable security detections.
+This project provided practical experience in using a SIEM to move from raw Windows security events to usable security detections.
 
-It involved creating SPL searches, testing the detections, configuring alerts,
-reviewing the resulting events and documenting the investigation process.
+It involved creating SPL searches, testing the detections, configuring alerts, reviewing the resulting events and documenting the investigation process.
 
